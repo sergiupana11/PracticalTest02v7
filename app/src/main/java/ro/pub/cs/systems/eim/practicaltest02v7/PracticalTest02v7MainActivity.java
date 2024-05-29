@@ -22,6 +22,8 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
     private TextView alarmFeedbackTextView = null;
     private ServerThread serverThread = null;
 
+    private ClientThread clientThread = null;
+
     private final ConnectClickButtonListener connectClickButtonListener = new ConnectClickButtonListener();
 
     private class ConnectClickButtonListener implements View.OnClickListener {
@@ -60,12 +62,10 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
                 return;
             }
 
-            alarmFeedbackTextView.setText("");
-
             Log.d(Constants.TAG, "set parameters");
 
             ClientThread clientThread = new ClientThread(
-                    clientAddress, Integer.parseInt(clientPort), hour, minute, Constants.SET, alarmFeedbackTextView
+                    clientAddress, Integer.parseInt(clientPort), Constants.SET, hour, minute,  alarmFeedbackTextView
             );
             clientThread.start();
         }
@@ -79,10 +79,8 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
             String clientAddress = clientAddressEditText.getText().toString();
             String clientPort = clientPortEditText.getText().toString();
 
-            alarmFeedbackTextView.setText("");
-
             ClientThread clientThread = new ClientThread(
-                    clientAddress, Integer.parseInt(clientPort), null, null, Constants.RESET, alarmFeedbackTextView
+                    clientAddress, Integer.parseInt(clientPort), Constants.RESET, null, null, alarmFeedbackTextView
             );
             clientThread.start();
         }
@@ -96,10 +94,8 @@ public class PracticalTest02v7MainActivity extends AppCompatActivity {
             String clientAddress = clientAddressEditText.getText().toString();
             String clientPort = clientPortEditText.getText().toString();
 
-            alarmFeedbackTextView.setText("");
-
             ClientThread clientThread = new ClientThread(
-                    clientAddress, Integer.parseInt(clientPort), null, null, Constants.POLL, alarmFeedbackTextView
+                    clientAddress, Integer.parseInt(clientPort), Constants.POLL,null, null,  alarmFeedbackTextView
             );
             clientThread.start();
         }

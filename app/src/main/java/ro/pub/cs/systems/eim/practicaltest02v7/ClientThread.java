@@ -18,7 +18,7 @@ public class ClientThread extends Thread {
     private final TextView alarmFeedbackTextView;
     private Socket socket;
 
-    public ClientThread(String address, int port, String hour, String minute, String action, TextView alarmFeedbackTextView) {
+    public ClientThread(String address, int port, String action, String hour, String minute, TextView alarmFeedbackTextView) {
         this.address = address;
         this.port = port;
         this.action = action;
@@ -30,17 +30,20 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         try {
-            Log.d(Constants.TAG, "[CLIENT THREAD] Starting client thread");
+            Log.d(Constants.TAG, "[CLIENT THREAD] Starting client thread on port " + port);
             socket = new Socket(address, port);
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
             printWriter.println(action);
+            Log.d(Constants.TAG, "[CLIENT THREAD] Sent action: " + action);
             printWriter.flush();
             printWriter.println(hour);
+            Log.d(Constants.TAG, "[CLIENT THREAD] Sent hour: " + hour);
             printWriter.flush();
             printWriter.println(minute);
+            Log.d(Constants.TAG, "[CLIENT THREAD] Sent minute: " + minute);
             printWriter.flush();
 
             String result;

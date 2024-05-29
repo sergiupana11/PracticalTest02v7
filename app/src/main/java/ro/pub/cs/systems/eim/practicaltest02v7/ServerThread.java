@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 
 public class ServerThread extends Thread {
@@ -30,7 +31,13 @@ public class ServerThread extends Thread {
     }
 
     public synchronized void addAlarm(String clientIp, AlarmInfo alarmInfo) {
+        Log.d(Constants.TAG, "[SERVER THREAD] Adding alarm for client " + clientIp);
         activeAlarms.put(clientIp, alarmInfo);
+    }
+
+    public synchronized AlarmInfo getAlarm(String clientIp) {
+        Log.d(Constants.TAG, "[SERVER THREAD] Getting alarm for client " + clientIp);
+        return activeAlarms.get(clientIp);
     }
 
     public synchronized void deleteAlarm(String clientIp) {
@@ -42,7 +49,9 @@ public class ServerThread extends Thread {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Log.i(Constants.TAG, "[SERVER THREAD] Waiting for a client invocation");
-                CommunicationThread communicationThread = new CommunicationThread(this, serverSocket.accept());
+                Socket socket = serverSocket.accept();
+                Log.i(Constants.TAG, "[SERVER THREAD] A connection request was received from " + socket.getInetAddress() + ":" + socket.getPort());
+                CommunicationThread communicationThread = new CommunicationThread(this, socket);
                 communicationThread.start();
             }
         } catch (IOException e) {
